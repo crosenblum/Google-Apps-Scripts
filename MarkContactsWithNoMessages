@@ -1,0 +1,60 @@
+
+
+function GetAllContacts() {
+
+    // get all contacts
+    var contacts = ContactsApp.getContacts();
+
+    // assign object for contact group    
+    var group = ContactsApp.getContactGroup('ToBeDeleted');
+
+    // loop through each contact
+    for (var i=0; i<contacts.length; i++) {
+
+        // get current email address    
+        email = contacts[i].getPrimaryEmail();
+        
+         // check if email is not null
+        if (!(email==null)) {
+
+            // display email in the log
+            // Logger.log(email);
+
+            // check message count
+            count = ThreadCount(email);
+
+            // Display the total count of messages for this user
+            // Logger.log(count);
+
+            // if count is zero or null then add that user to Group called Blacklist
+            if (count == 0 || count == null) {
+                // add this user to the "ToBeDeleted" contact group
+                group.addContact(contacts[i]);
+            }
+     
+        }
+
+    }
+
+}
+
+function ThreadCount(email) {
+
+    // create search string
+    search = 'from:'+email;
+    
+    // search threads for messages from this email address
+    threads = GmailApp.search(search);
+
+    // get the total number of threads
+    count = threads.length;
+
+    // return to sender the total
+    return count;
+
+}
+// clear the log
+Logger.clear();
+
+// get all contacts
+GetAllContacts();
